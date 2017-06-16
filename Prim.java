@@ -51,16 +51,6 @@ public class Prim {
 	}
 
 	public static void main (String[] args){
-		/*
-           2    3
-        (0)--(1)--(2)
-        |    / \   |
-        6| 8/   \5 |7
-        | /      \ |
-        (3)-------(4)
-             9
-        */
-		
 		Prim p = new Prim();
 		int graph[][] = new int[][] {
 			{0, 2, 0, 6, 0},
