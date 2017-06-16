@@ -1,5 +1,3 @@
-package reference;
-
 public class Prim {
 
 	private static final int V = 5;
