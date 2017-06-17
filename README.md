@@ -12,3 +12,6 @@ Java/Python code for solving the Knapsack problem using recursive memoization.
 
 ### Dijkstra:
 Python code for finding the shortest path between two nodes in a graph using Dijkstra's shortest path algorithm.
+
+### PrimMST:
+Python code for finding the minimum spanning tree of a graph using Prim's MST algorithm.
