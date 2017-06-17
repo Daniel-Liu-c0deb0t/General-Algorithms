@@ -9,3 +9,6 @@ Java/Python code for finding a number using binary search (upper bound and lower
 
 ### Knapsack:
 Java/Python code for solving the Knapsack problem using recursive memoization.
+
+### Dijkstra:
+Python code for finding the shortest path between two nodes in a graph using Dijkstra's shortest path algorithm.
