@@ -1,3 +1,5 @@
+package reference;
+
 import java.util.*;
 
 public class Knapsack {
@@ -10,7 +12,7 @@ public class Knapsack {
 			}
 		}
 		
-		System.out.println(knapsack01(2, 3, 0, new int[]{1, 2, 3}, new int[]{1, 2, 4}, dp1));
+		System.out.println(knapsack01(2, 3, new int[]{1, 2, 3}, new int[]{1, 2, 4}, dp1));
 		
 		int[] dp2 = new int[4];
 		
@@ -35,17 +37,17 @@ public class Knapsack {
 		return dp[w];
 	}
 	
-	public static int knapsack01(int i, int w, int v, int[] weights, int[] values, int[][] dp){
+	public static int knapsack01(int i, int w, int[] weights, int[] values, int[][] dp){
 		if(i < 0)
-			return v;
+			return 0;
 		
 		if(dp[i][w] != -1)
 			return dp[i][w];
 		
 		if(w < weights[i])
-			dp[i][w] = knapsack01(i - 1, w, v, weights, values, dp);
+			dp[i][w] = knapsack01(i - 1, w, weights, values, dp);
 		else
-			dp[i][w] = Math.max(knapsack01(i - 1, w, v, weights, values, dp),  knapsack01(i - 1, w - weights[i], v + values[i], weights, values, dp));
+			dp[i][w] = Math.max(knapsack01(i - 1, w, weights, values, dp), values[i] + knapsack01(i - 1, w - weights[i], weights, values, dp));
 		
 		return dp[i][w];
 	}
