@@ -1,5 +1,5 @@
 def binary_search(arr, val, left_most):
-    l, r, res = 0, len(arr) - 1, -1
+    l, r, res = 0, len(arr) - 1, None
     while l <= r:
         mid = l + (r - l) // 2
         if arr[mid] == val:
