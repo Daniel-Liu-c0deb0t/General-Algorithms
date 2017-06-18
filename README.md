@@ -15,3 +15,6 @@ Python code for finding the shortest path between two nodes in a graph using Dij
 
 ### PrimMST:
 Python code for finding the minimum spanning tree of a graph using Prim's MST algorithm.
+
+### FloydWarshall:
+Python code for finding all-pairs shortest path in a graph using Floyd-Warshall all-pairs shortest path algorithm.
