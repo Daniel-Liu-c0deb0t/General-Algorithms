@@ -21,3 +21,6 @@ Python code for finding all-pairs shortest path in a graph using Floyd-Warshall 
 
 ### BellmanFord:
 Python code for finding the shortest path between two nodes in a graph using Bellman-Ford shortest path algorithm.
+
+### UnionFind:
+Python implementation of the Union-Find data structure.
