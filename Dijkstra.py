@@ -15,7 +15,7 @@ def dijkstra_shortest_path(graph, start, end):
                     heappush(pq, (u_dist + graph[u][v], v, u))
     path = []
     curr = end
-    while curr != None:
+    while curr is not None:
         path.insert(0, curr)
         curr = prev[curr]
     return dist[end], path
