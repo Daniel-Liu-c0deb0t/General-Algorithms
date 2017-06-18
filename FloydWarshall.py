@@ -16,7 +16,7 @@ def floyd_warshall_all_pairs_shortest_path(graph, start, end):
     while curr is not None:
         path.append(curr)
         curr = next[curr][end]
-    return dp[start][end], path
+    return 0 if dp[start][end] is None else dp[start][end], path
 
 print(floyd_warshall_all_pairs_shortest_path([[None, 5, 3, 4, None],
                                               [5, None, 1, None, 2],
