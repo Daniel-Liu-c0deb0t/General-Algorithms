@@ -24,3 +24,6 @@ Python code for finding the shortest path between two nodes in a graph using Bel
 
 ### UnionFind:
 Python implementation of the Union-Find data structure.
+
+### BITree:
+Python implementation of the Fenwick Tree or Binary Indexed Tree data structure.
