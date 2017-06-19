@@ -1,4 +1,4 @@
-class UnionFind():
+class UnionFind:
     sets = []
 
     def __init__(self, num_sets):
