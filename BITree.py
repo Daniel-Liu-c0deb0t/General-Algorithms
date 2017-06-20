@@ -26,6 +26,9 @@ class BITree:
     def set(self, i, val):
         self.add(i, val - self.get(i))
 
+    def range_sum(self, i, j):
+        return self.sum(j) - self.sum(i - 1)
+
 bit = BITree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 print(bit.sum(9))
 bit.add(2, 3)
@@ -33,3 +36,4 @@ print(bit.sum(9))
 print(bit.get(2))
 bit.set(2, 3)
 print(bit.sum(9))
+print(bit.range_sum(0, 5))
