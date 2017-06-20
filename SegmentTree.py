@@ -43,6 +43,10 @@ class SegmentTreeSum:
         self.recursive_range_add(mid + 1, curr_end, seg_start, seg_end, i * 2 + 2, val)
         self.seg_tree[i][0] = self.seg_tree[i * 2 + 1][0] + self.seg_tree[i * 2 + 2][0]
 
+    def single_set(self, pos, val):
+        self.recursive_range_add(0, self.size - 1, pos, pos, 0,
+                                 val - self.recursive_range_sum(0, self.size - 1, pos, pos, 0))
+
     def range_sum(self, seg_start, seg_end):
         return self.recursive_range_sum(0, self.size - 1, seg_start, seg_end, 0)
 
@@ -101,9 +105,39 @@ class SegmentTreeMax:
         self.recursive_range_add(mid + 1, curr_end, seg_start, seg_end, i * 2 + 1, val)
         self.seg_tree[i][2] = max(self.seg_tree[i * 2][2], self.seg_tree[i * 2 + 1][2]) + self.seg_tree[i][3]
 
-    def single_set(self, pos, val):
+    def single_set1(self, pos, val):
         pos += 1
         self.recursive_range_add(1, self.size, pos, pos, 1, val - self.recursive_range_max(pos, pos, 1, 0))
+
+    def single_set2(self, pos, val):
+        pos += 1
+        self.recursive_single_set(pos, 1, val)
+
+    def single_add(self, pos, val):
+        pos += 1
+        self.recursive_single_add(pos, 1, val)
+
+    def recursive_single_set(self, pos, i, val):
+        if self.seg_tree[i][0] == pos and self.seg_tree[i][1] == pos:
+            self.seg_tree[i][2] = val
+        else:
+            mid = self.seg_tree[i][0] + (self.seg_tree[i][1] - self.seg_tree[i][0]) // 2
+            if pos <= mid:
+                self.recursive_single_set(pos, i * 2, val)
+            else:
+                self.recursive_single_set(pos, i * 2 + 1, val)
+            self.seg_tree[i][2] = max(self.seg_tree[i * 2][2], self.seg_tree[i * 2 + 1][2])
+
+    def recursive_single_add(self, pos, i, val):
+        if self.seg_tree[i][0] == pos and self.seg_tree[i][1] == pos:
+            self.seg_tree[i][2] += val
+        else:
+            mid = self.seg_tree[i][0] + (self.seg_tree[i][1] - self.seg_tree[i][0]) // 2
+            if pos <= mid:
+                self.recursive_single_add(pos, i * 2, val)
+            else:
+                self.recursive_single_add(pos, i * 2 + 1, val)
+            self.seg_tree[i][2] = max(self.seg_tree[i * 2][2], self.seg_tree[i * 2 + 1][2])
 
     def range_max(self, range_start, range_end):
         range_start += 1
@@ -126,15 +160,17 @@ class SegmentTreeMax:
 tree = SegmentTreeSum([1, 3, 6, 2, 0, 9, 8, 10, 11])
 print(tree.range_sum(0, 3))
 tree.range_add(0, 3, 10)
+tree.single_set(3, 20)
 print(tree.range_sum(0, 7))
 print([tree.range_sum(i, i) for i in range(tree.size)])
 
 tree2 = SegmentTreeMax([1, 3, 6, 2, 0, 9, 8, 10, 11])
 print(tree2.range_max(0, 3))
-tree2.range_add(3, 3, 11)
+# tree2.range_add(3, 3, 11)
 print(tree2.range_max(0, 3))
-tree2.range_add(3, 5, 11)
+# tree2.range_add(3, 5, 11)
+tree2.single_add(2, 6)
 print(tree2.range_max(0, 8))
-tree2.single_set(3, 1)
+tree2.single_set2(3, 1)
 print(tree2.range_max(0, 8))
 print([tree2.range_max(i, i) for i in range(tree2.size)])
