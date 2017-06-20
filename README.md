@@ -27,3 +27,6 @@ Python implementation of the Union-Find data structure.
 
 ### BITree:
 Python implementation of the Fenwick Tree or Binary Indexed Tree data structure.
+
+### SegmentTree:
+Python implementation of the Segment Tree data structure, with the ability to find sum and max in a range.
