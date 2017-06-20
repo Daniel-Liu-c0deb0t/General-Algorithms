@@ -101,6 +101,10 @@ class SegmentTreeMax:
         self.recursive_range_add(mid + 1, curr_end, seg_start, seg_end, i * 2 + 1, val)
         self.seg_tree[i][2] = max(self.seg_tree[i * 2][2], self.seg_tree[i * 2 + 1][2]) + self.seg_tree[i][3]
 
+    def single_set(self, pos, val):
+        pos += 1
+        self.recursive_range_add(1, self.size, pos, pos, 1, val - self.recursive_range_max(pos, pos, 1, 0))
+
     def range_max(self, range_start, range_end):
         range_start += 1
         range_end += 1
@@ -130,5 +134,7 @@ print(tree2.range_max(0, 3))
 tree2.range_add(3, 3, 11)
 print(tree2.range_max(0, 3))
 tree2.range_add(3, 5, 11)
+print(tree2.range_max(0, 8))
+tree2.single_set(3, 1)
 print(tree2.range_max(0, 8))
 print([tree2.range_max(i, i) for i in range(tree2.size)])
