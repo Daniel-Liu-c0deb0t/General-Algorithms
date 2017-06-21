@@ -30,3 +30,6 @@ Python implementation of the Fenwick Tree or Binary Indexed Tree data structure.
 
 ### SegmentTree:
 Python implementation of the Segment Tree data structure, with the ability to find sum and max in a range.
+
+### Trie:
+Python implementation of the Trie data structure. Contains insert, delete, contains, and find all words with prefix functions.
