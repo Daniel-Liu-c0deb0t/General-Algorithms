@@ -33,3 +33,6 @@ Python implementation of the Segment Tree data structure, with the ability to fi
 
 ### Trie:
 Python implementation of the Trie data structure. Contains insert, delete, contains, and find all words with prefix functions.
+
+### KruskalMST:
+Python code for finding the minimum spanning tree of a graph using Kruskal's MST algorithm.
