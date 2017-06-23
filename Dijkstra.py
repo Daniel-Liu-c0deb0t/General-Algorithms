@@ -16,8 +16,9 @@ def dijkstra_shortest_path(graph, start, end):
     path = []
     curr = end
     while curr is not None:
-        path.insert(0, curr)
+        path.append(curr)
         curr = prev[curr]
+    path.reverse()
     return dist[end], path
 
 print(dijkstra_shortest_path([[None, 5, 3, 4, None],

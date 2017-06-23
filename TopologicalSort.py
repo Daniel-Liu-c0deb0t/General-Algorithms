@@ -3,7 +3,7 @@ def recursive_topological_sort(u, visited, stack, graph):
     for v in range(len(graph[u])):
         if graph[u][v] is not None and not visited[v]:
             recursive_topological_sort(v, visited, stack, graph)
-    stack.insert(0, u)
+    stack.append(u)
 
 
 def topological_sort(graph):
@@ -12,6 +12,7 @@ def topological_sort(graph):
     for u in range(len(graph)):
         if not visited[u]:
             recursive_topological_sort(u, visited, stack, graph)
+    stack.reverse()
     return stack
 
 print(topological_sort([[None, None, None, None, None, None],
