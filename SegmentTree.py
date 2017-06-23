@@ -95,16 +95,16 @@ class SegmentTree3:
         self.tree = ([0] * self.size) + data
         self.lazy = [0] * self.size
 
-    def build(self, start, end):
-        k = 2
-        start += self.size
-        end += self.size - 1
-        while start > 1:
-            start //= 2
-            end //= 2
-            for i in range(end, start - 1, -1):
-                self.calc(i, k)
-            k *= 2
+#    def build(self, start, end):
+#        k = 2
+#        start += self.size
+#        end += self.size - 1
+#        while start > 1:
+#            start //= 2
+#            end //= 2
+#            for i in range(end, start - 1, -1):
+#                self.calc(i, k)
+#            k *= 2
 
     def apply(self, p, val, k):
         self.tree[p] = val * k
