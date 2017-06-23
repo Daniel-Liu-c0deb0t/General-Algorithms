@@ -29,10 +29,16 @@ Python implementation of the Union-Find data structure.
 Python implementation of the Fenwick Tree or Binary Indexed Tree data structure.
 
 ### SegmentTree:
-Python implementation of the Segment Tree data structure, with the ability to find sum and max in a range.
+Python implementation of the Segment Tree data structure, with three different variations: range max and single replace, range max and range increment, and range sum and range replace.
 
 ### Trie:
 Python implementation of the Trie data structure. Contains insert, delete, contains, and find all words with prefix functions.
 
 ### KruskalMST:
 Python code for finding the minimum spanning tree of a graph using Kruskal's MST algorithm.
+
+### KnuthMorrisPratt:
+Python implementation of the Knuth-Morris-Pratt (KMP) string matching algorithm.
+
+### TopologicalSort:
+Python code for doing a topological sort on a directed acyclic graph (DAG).
