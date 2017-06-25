@@ -42,3 +42,6 @@ Python implementation of the Knuth-Morris-Pratt (KMP) string matching algorithm.
 
 ### TopologicalSort:
 Python code for doing a topological sort on a directed acyclic graph (DAG).
+
+### BreadthFirstSearch:
+Python implementation of breadth first search (BFS), using the built in collections.deque.
