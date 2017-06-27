@@ -45,3 +45,6 @@ Python code for doing a topological sort on a directed acyclic graph (DAG).
 
 ### BreadthFirstSearch:
 Python implementation of breadth first search (BFS), using the built in collections.deque.
+
+### Geometry:
+A collection of computational geometry functions (for points, lines, line segments, vectors, and polygons) written in Python. Includes Graham's Scan algorithm for finding the convex hull of a set of points.
