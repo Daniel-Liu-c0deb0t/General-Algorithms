@@ -1,7 +1,7 @@
 from math import isclose, radians, degrees, sin, cos, acos, atan2
 
 # point: (x, y, ...)
-# line (ax + by + ... + c = 0): (a, b, ..., c) or 2 points
+# line (ax + by + c = 0): (a, b, c) or 2 points
 # line segment: 2 points
 # vector: (x, y, ...)
 # circle: point and radius
@@ -46,28 +46,28 @@ def points_to_line_2d(point1, point2):
 print(points_to_line_2d((0, 1), (1, 1)))
 
 
-def lines_parallel(*lines):
+def lines_parallel_2d(*lines):
     for i in range(len(lines) - 1):
         for j in range(len(lines[i]) - 1):
             if not isclose(lines[i][j], lines[i + 1][j]):
                 return False
     return True
 
-print(lines_parallel(points_to_line_2d((0, 1), (1, 1)), points_to_line_2d((0, 0), (1, 0))))
+print(lines_parallel_2d(points_to_line_2d((0, 1), (1, 1)), points_to_line_2d((0, 0), (1, 0))))
 
 
-def lines_equals(*lines):
+def lines_equals_2d(*lines):
     for i in range(len(lines) - 1):
         for j in range(len(lines[i])):
             if not isclose(lines[i][j], lines[i + 1][j]):
                 return False
     return True
 
-print(lines_equals(points_to_line_2d((0, 1), (1, 1)), points_to_line_2d((0, 1), (1, 1))))
+print(lines_equals_2d(points_to_line_2d((0, 1), (1, 1)), points_to_line_2d((0, 1), (1, 1))))
 
 
 def lines_intersect_2d(line1, line2):
-    if lines_parallel(line1, line2):
+    if lines_parallel_2d(line1, line2):
         return None
     x = (line2[1] * line1[2] - line1[1] * line2[2]) / (line2[0] * line1[1] - line1[0] * line2[1])
     if isclose(line1[1], 0):
