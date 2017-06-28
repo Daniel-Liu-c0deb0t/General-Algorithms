@@ -34,6 +34,10 @@ def get(data, i):
     return (data >> i) & 1
 
 
+def get_range(data, start, end):
+    return (data >> start) & mask(0, end - start)
+
+
 def ones(data):
     while data > 0:
         yield (data & -data).bit_length() - 1
@@ -85,3 +89,4 @@ print(str(bin(mask(1, 10))))
 print(str(bin(one_range(0, 1, 10))))
 print(str(bin(zero_range(0b111111111111, 1, 10))))
 print(str(bin(flip_range(0, 5, 10))))
+print(str(bin(get_range(0b10110011100011110000, 1, 12))))
