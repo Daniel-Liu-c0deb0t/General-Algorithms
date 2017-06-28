@@ -293,11 +293,11 @@ def graham_scan_2d(points):
     i = 2
     while i < len(points):
         j = len(stack) - 1
-        if points_ccw_2d(stack[j - 1], stack[j], points[i]):
+        if not points_ccw_2d(points[i], stack[j], stack[j - 1]):
             stack.append(points[i])
             i += 1
         else:
             stack.pop()
     return stack
 
-print(graham_scan_2d([(0, 0), (1, 1), (2, 1), (3, 0), (3, -1), (2, -2), (1, -2), (0, -1)]))
+print(graham_scan_2d([(0, 0), (1, 1), (2, 1), (3, 0), (3, -1), (2, -2), (1, -2), (0, -1), (0.5, 0.5)]))
