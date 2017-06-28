@@ -50,4 +50,4 @@ Python implementation of breadth first search (BFS), using the built in collecti
 A collection of computational geometry functions (for points, lines, line segments, vectors, and polygons) written in Python. Includes Graham's Scan algorithm for finding the convex hull of a set of points.
 
 ### BitManipulation:
-A collection of bit manipulation functions written in Python. Most functions are written to be used as a faster alternative to a boolean array.
+A collection of bit manipulation functions written in Python. Most functions are written to be used as a faster alternative to a boolean list.
