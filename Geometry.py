@@ -28,6 +28,15 @@ def points_dist(point1, point2):
 print(points_dist((0, 0, 0), (1, 1, 1)))
 
 
+def points_dist_squared(point1, point2):
+    dist_squared = 0
+    for i in range(len(point1)):
+        dist_squared += (point1[i] - point2[i]) ** 2
+    return dist_squared
+
+print(points_dist_squared((0, 0, 0), (1, 1, 1)))
+
+
 def point_rotate_2d(point, origin, theta):
     rad = radians(theta)
     return origin[0] + (point[0] - origin[0]) * cos(rad) - (point[1] - origin[1]) * sin(rad), \
@@ -136,6 +145,15 @@ def vectors_dot(vector1, vector2):
     return result
 
 print(vectors_dot((1, 2, 3), (4, 5, 6)))
+
+
+def vector_normal(vector):
+    result = 0
+    for i in vector:
+        result += i ** 2
+    return result ** 0.5
+
+print(vector_normal((1, 1)))
 
 
 def vector_normal_squared(vector):
@@ -288,7 +306,7 @@ def graham_scan_2d(points):
             min_i = i
     points[0], points[min_i] = points[min_i], points[0]
     pivot = points[0]
-    points.sort(key=lambda p: (atan2(p[1] - pivot[1], p[0] - pivot[0]), points_dist(pivot, p)))
+    points.sort(key=lambda p: (atan2(p[1] - pivot[1], p[0] - pivot[0]), points_dist_squared(pivot, p)))
     stack = [points[-1], points[0], points[1]]
     i = 2
     while i < len(points):
