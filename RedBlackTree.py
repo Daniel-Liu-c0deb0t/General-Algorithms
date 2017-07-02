@@ -76,6 +76,7 @@ class RedBlackTree:
                     new.parent.parent.red = True
                     self.left_rotate(new.parent.parent)
         self.root.red = False
+        return new
 
     def remove_node(self, node):
         self.size -= 1
