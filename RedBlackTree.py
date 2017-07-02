@@ -25,15 +25,19 @@ class RedBlackTree:
 
     def add(self, key, val):
         self.size += 1
-        new = self.Node(key, val)
         curr = self.root
         parent = RedBlackTree.NoneNode.get_instance()
         while curr != RedBlackTree.NoneNode.get_instance():
             parent = curr
-            if new.key < curr.key:
+            if parent.key == key:
+                parent.val = val
+                self.size -= 1
+                return
+            if key < curr.key:
                 curr = curr.left
             else:
                 curr = curr.right
+        new = self.Node(key, val)
         new.parent = parent
         if parent == RedBlackTree.NoneNode.get_instance():
             self.root = new
@@ -250,3 +254,6 @@ tree.remove(100)
 tree.remove(10)
 print(tree.inorder_values())
 print(tree.contains(2))
+tree.add(2, "hi")
+tree.add(3, "code")
+print(tree.inorder_values())
