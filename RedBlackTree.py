@@ -77,9 +77,8 @@ class RedBlackTree:
                     self.left_rotate(new.parent.parent)
         self.root.red = False
 
-    def remove(self, key):
+    def remove_node(self, node):
         self.size -= 1
-        node = self.get_node(key)
         node1 = None
         node2 = None
         if node.left == RedBlackTree.NoneNode.get_instance() or node.right == RedBlackTree.NoneNode.get_instance():
@@ -147,6 +146,43 @@ class RedBlackTree:
                         node2 = self.root
             node2.red = False
 
+    def remove(self, key):
+        node = self.get_node(key)
+        self.remove_node(node)
+        return node.val
+
+    def get_min_node(self, curr=None):
+        if curr is None:
+            curr = self.root
+        while curr.left != RedBlackTree.NoneNode.get_instance():
+            curr = curr.left
+        return curr
+
+    def get_max_node(self, curr=None):
+        if curr is None:
+            curr = self.root
+        while curr.right != RedBlackTree.NoneNode.get_instance():
+            curr = curr.right
+        return curr
+
+    def get_min(self):
+        node = self.get_min_node()
+        return node.key, node.val
+
+    def get_max(self):
+        node = self.get_max_node()
+        return node.key, node.val
+
+    def remove_min(self):
+        node = self.get_min_node()
+        self.remove_node(node)
+        return node.key, node.val
+
+    def remove_max(self):
+        node = self.get_max_node()
+        self.remove_node(node)
+        return node.key, node.val
+
     def left_rotate(self, node):
         other = node.right
         node.right = other.left
@@ -196,10 +232,7 @@ class RedBlackTree:
 
     def successor_node(self, node):
         if node.right != RedBlackTree.NoneNode.get_instance():
-            curr = node.right
-            while curr.left != RedBlackTree.NoneNode.get_instance():
-                curr = curr.left
-            return curr
+            return self.get_min_node(node.right)
         other = node.parent
         while other != RedBlackTree.NoneNode.get_instance() and node == other.right:
             node = other
@@ -208,10 +241,7 @@ class RedBlackTree:
 
     def predecessor_node(self, node):
         if node.left != RedBlackTree.NoneNode.get_instance():
-            curr = node.left
-            while curr.right != RedBlackTree.NoneNode.get_instance():
-                curr = curr.right
-            return curr
+            return self.get_max_node(node.left)
         other = node.parent
         while other != RedBlackTree.NoneNode.get_instance() and node == other.left:
             node = other
@@ -219,20 +249,26 @@ class RedBlackTree:
         return other
 
     def successor(self, key):
-        return self.successor_node(self.get_node(key)).val
+        node = self.successor_node(self.get_node(key))
+        if node == RedBlackTree.NoneNode.get_instance():
+            return None
+        return node.key, node.val
 
     def predecessor(self, key):
-        return self.predecessor_node(self.get_node(key)).val
+        node = self.predecessor_node(self.get_node(key))
+        if node == RedBlackTree.NoneNode.get_instance():
+            return None
+        return node.key, node.val
 
-    def inorder_values(self):
-        return self.recursive_inorder_values(self.root, [])
+    def inorder(self):
+        return self.recursive_inorder(self.root, [])
 
-    def recursive_inorder_values(self, node, result):
+    def recursive_inorder(self, node, result):
         if node == RedBlackTree.NoneNode.get_instance():
             return result
-        self.recursive_inorder_values(node.left, result)
-        result.append(node.val)
-        self.recursive_inorder_values(node.right, result)
+        self.recursive_inorder(node.left, result)
+        result.append((node.key, node.val))
+        self.recursive_inorder(node.right, result)
         return result
 
 tree = RedBlackTree()
@@ -249,11 +285,16 @@ print(tree.predecessor(0))
 print(tree.successor(0))
 print(tree.predecessor(3))
 print(tree.successor(3))
-print(tree.inorder_values())
-tree.remove(100)
+print(tree.inorder())
+print(tree.remove(100))
 tree.remove(10)
-print(tree.inorder_values())
+print(tree.inorder())
 print(tree.contains(2))
 tree.add(2, "hi")
 tree.add(3, "code")
-print(tree.inorder_values())
+print(tree.inorder())
+print(tree.get_min())
+print(tree.get_max())
+print(tree.remove_min())
+print(tree.remove_max())
+print(tree.inorder())
