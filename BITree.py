@@ -1,6 +1,4 @@
 class BITree:
-    bit = []
-
     def __init__(self, tree):
         self.bit = [0] * (len(tree) + 1)
         for i in range(len(tree)):

@@ -14,7 +14,7 @@ class SegmentTree1:
             p //= 2
 
     def range_max(self, start, end):
-        res = 0
+        res = -10000000000
         start += self.size
         end += self.size
         while start < end:
@@ -71,7 +71,7 @@ class SegmentTree2:
         self.build(end2 - 1)
 
     def range_max(self, start, end):
-        res = 0
+        res = -10000000000
         start += self.size
         end += self.size
         self.push(start)
@@ -165,7 +165,7 @@ class SegmentTree3:
             k *= 2
 
     def range_sum(self, start, end):
-        res = 0
+        res = -10000000000
         self.push(start, start + 1)
         self.push(end - 1, end)
         start += self.size

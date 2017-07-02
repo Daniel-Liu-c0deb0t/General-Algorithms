@@ -6,9 +6,11 @@ class Trie:
 
     def __init__(self):
         self.root = self.Node()
+        self.size = 0
 
     def add(self, string):
         curr = self.root
+        self.size += 1
         for i in range(len(string)):
             if string[i] not in curr.nodes:
                 curr.nodes[string[i]] = self.Node()
@@ -27,7 +29,8 @@ class Trie:
         return True
 
     def remove(self, string):
-        self.recursive_remove(string, self.root, 0)
+        if self.recursive_remove(string, self.root, 0):
+            self.size -= 1
 
     def recursive_remove(self, string, curr, i):
         if string[i] not in curr.nodes:

@@ -1,11 +1,12 @@
 class UnionFind:
-    sets = []
-
     def __init__(self, num_sets):
+        self.sets = []
+        self.size = num_sets
         for i in range(num_sets):
             self.sets.append([i, 0])
 
     def add(self, i):
+        self.size += 1
         self.sets.append([i, 0])
 
     def find(self, i):
