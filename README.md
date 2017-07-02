@@ -51,3 +51,6 @@ A collection of computational geometry functions (for points, lines, line segmen
 
 ### BitManipulation:
 A collection of bit manipulation functions written in Python. Most functions are written to be used as a faster alternative to a boolean list.
+
+### RedBlackTree:
+Python implementation of the Red-Black Tree data structure. Can be used like a dictionary or set. The functionality and data structure is similar to Java's TreeMap and TreeSet.
