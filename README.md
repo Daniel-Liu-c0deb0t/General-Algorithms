@@ -54,3 +54,6 @@ A collection of bit manipulation functions written in Python. Most functions are
 
 ### RedBlackTree:
 Python implementation of the Red-Black Tree data structure. Can be used like a dictionary or set. The functionality and data structure is similar to Java's TreeMap and TreeSet.
+
+### EditDistance:
+Java code for calculating Levenshtein distance between two strings and fuzzy searching for one string within another.
