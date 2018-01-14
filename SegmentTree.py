@@ -35,6 +35,8 @@ class SegmentTree2:
         self.size = len(data)
         self.tree = ([0] * self.size) + data
         self.lazy = [0] * self.size
+        for i in reversed(range(self.size)):
+            self.tree[i] = max(self.tree[i * 2], self.tree[i * 2 + 1])
 
     def build(self, p):
         while p > 1:
@@ -94,6 +96,8 @@ class SegmentTree3:
         self.size = len(data)
         self.tree = ([0] * self.size) + data
         self.lazy = [0] * self.size
+        for i in reversed(range(self.size)):
+            self.tree[i] = max(self.tree[i * 2], self.tree[i * 2 + 1])
 
 #    def build(self, start, end):
 #        k = 2
@@ -165,7 +169,7 @@ class SegmentTree3:
             k *= 2
 
     def range_sum(self, start, end):
-        res = -10000000000
+        res = 0
         self.push(start, start + 1)
         self.push(end - 1, end)
         start += self.size
