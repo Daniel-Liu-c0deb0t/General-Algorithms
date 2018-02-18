@@ -1,4 +1,5 @@
 # General Algorithms
 A variety of algorithm implementations and short classes.
 
-These were made as references for programming competitions.
+Some of these classes were made as references for programming competitions.
+There are also some assorted machine learning programs.
