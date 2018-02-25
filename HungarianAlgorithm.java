@@ -8,6 +8,7 @@ public class HungarianAlgorithm{
 	static HashSet<Integer>[] check;
 	static HashMap<Integer, ArrayList<Integer>>[] g;
 	
+	//max bipartite matching
 	public static void main(String[] args){
 		g = new HashMap[2];
 		
@@ -22,10 +23,10 @@ public class HungarianAlgorithm{
 		g[1].put(1, new ArrayList<Integer>(Arrays.asList(0, 1, 2)));
 		g[1].put(2, new ArrayList<Integer>(Arrays.asList()));
 		
-		System.out.println(solve());
+		System.out.println(hungarian());
 	}
 	
-	static int solve(){
+	static int hungarian(){
 		match = new HashMap[2];
 		check = new HashSet[2];
 		

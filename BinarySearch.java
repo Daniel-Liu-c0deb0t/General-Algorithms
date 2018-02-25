@@ -14,7 +14,7 @@ public class BinarySearch{
 	static int bSearch(int[] arr, int t, boolean upper){
 		int l = 0, r = arr.length - 1, res = -1;
 		while(l <= r){
-			int m = l + (r - l) / 2;
+			int m = (l + r) >>> 1;
 			if(arr[m] > t){
 				r = m - 1;
 			}else if(arr[m] < t){
@@ -40,7 +40,7 @@ public class BinarySearch{
 	static int bSearchLower(int[] arr, int t){
 		int l = 0, r = arr.length - 1;
 		while(l < r){
-			int m = (l + r + 1) / 2;
+			int m = (l + r + 1) >>> 1;
 			if(arr[m] > t){
 				r = m - 1;
 			}else{
@@ -53,7 +53,7 @@ public class BinarySearch{
 	static int bSearchHigher(int[] arr, int t){
 		int l = 0, r = arr.length - 1;
 		while(l < r){
-			int m = (l + r - 1) / 2;
+			int m = (l + r - 1) >>> 1;
 			if(arr[m] < t){
 				l = m + 1;
 			}else{
