@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.Random;
 
 public class SuffixArray{
 	Suffix[] sa;
@@ -10,6 +12,17 @@ public class SuffixArray{
 			System.out.println(str.substring(s.getSA(i)));
 			System.out.println(s.getLCP(i));
 		}
+		
+		int iter = 200000;
+		Random r = new Random();
+		
+		StringBuilder b = new StringBuilder();
+		for(int i = 0; i < iter; i++){
+			b.append((char)(r.nextInt(26) + 'a'));
+		}
+		
+		SuffixArray s2 = new SuffixArray(b.toString());
+		System.out.println(s2.getSA(0));
 	}
 	
 	SuffixArray(String s){
@@ -18,10 +31,15 @@ public class SuffixArray{
 			sa[i] = new Suffix(i, s.charAt(i) - 'a' + 1, i + 1 < s.length() ? s.charAt(i + 1) - 'a' + 1 : 0);
 		}
 		
-		radixSort();
+		Arrays.sort(sa, (x, y) -> {
+			if(x.rank1 == y.rank1)
+				return x.rank2 - y.rank2;
+			else
+				return x.rank1 - y.rank1;
+		});
 		
 		int[] idx = new int[s.length()];
-		for(int i = 4; i < s.length() * 2; i *= 2){
+		for(int i = 4; i < s.length() * 2; i *= 2){ //sort suffixes
 			int rank = 1;
 			int prevRank = sa[0].rank1;
 			sa[0].rank1 = rank;
@@ -42,11 +60,17 @@ public class SuffixArray{
 				sa[j].rank2 = next < s.length() ? sa[idx[next]].rank1 : 0;
 			}
 			
-			radixSort();
+			Arrays.sort(sa, (x, y) -> {
+				if(x.rank1 == y.rank1)
+					return x.rank2 - y.rank2;
+				else
+					return x.rank1 - y.rank1;
+			});
 		}
 		
 		lcp = new int[s.length()];
 		
+		//calculate LCP array
 		int[] inv = new int[s.length()];
 		for(int i = 0; i < s.length(); i++)
 			inv[getSA(i)] = i;
@@ -72,40 +96,6 @@ public class SuffixArray{
 	
 	int getLCP(int i){
 		return lcp[i];
-	}
-	
-	void radixSort(){
-		int max = 0;
-		for(int i = 0; i < sa.length; i++){
-			max = Math.max(max, sa[i].rank1 * 100 + sa[i].rank2);
-		}
-		
-		for(int i = 1; max / i > 0; i *= 10){
-			countingSort(i);
-		}
-	}
-	
-	void countingSort(int div){
-		Suffix[] res = new Suffix[sa.length];
-		int[] count = new int[10];
-		
-		for(int i = 0; i < sa.length; i++){
-			int n = sa[i].rank1 * 100 + sa[i].rank2;
-			count[(n / div) % 10]++;
-		}
-		
-		for(int i = 1; i < 10; i++){
-			count[i] += count[i - 1];
-		}
-		
-		for(int i = sa.length - 1; i >= 0; i--){
-			int n = sa[i].rank1 * 100 + sa[i].rank2;
-			res[--count[(n / div) % 10]] = sa[i];
-		}
-		
-		for(int i = 0; i < sa.length; i++){
-			sa[i] = res[i];
-		}
 	}
 	
 	class Suffix{
