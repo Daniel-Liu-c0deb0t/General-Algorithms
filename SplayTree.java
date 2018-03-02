@@ -1,7 +1,7 @@
 
 public class SplayTree{
 	Node nullNode, root;
-	int size;
+	int nodeIdx;
 	
 	public static void main(String[] args){
 		int[] arr = {1, 2, 3, 4, 5};
@@ -11,7 +11,7 @@ public class SplayTree{
 		t.revolve(0, 4, 1);
 		t.remove(4);
 		System.out.println(t.min(2, 3));
-		for(int i = 0; i < t.size - 2; i++){
+		for(int i = 0; i < t.nodeIdx - 2; i++){
 			System.out.print(t.min(i, i) + " ");
 		}
 		System.out.println();
@@ -29,18 +29,18 @@ public class SplayTree{
 		int[] s = new int[arr.length + 2];
 		System.arraycopy(arr, 0, s, 1, arr.length);
 		
-		size = arr.length;
+		nodeIdx = arr.length;
 		s[0] = Integer.MAX_VALUE;
-		s[size + 1] = Integer.MAX_VALUE;
-		size += 2;
-		root = construct(s, nullNode, 0, size - 1);
+		s[nodeIdx + 1] = Integer.MAX_VALUE;
+		nodeIdx += 2;
+		root = construct(s, nullNode, 0, nodeIdx - 1);
 	}
 	
 	Node construct(int[] s, Node parent, int l, int r){
 		if(l > r)
 			return nullNode;
 		int mid = (l + r) >>> 1;
-		Node x = newNode(parent, s[mid]);
+		Node x = createNode(parent, s[mid]);
 		x.c[0] = construct(s, x, l, mid - 1);
 		x.c[1] = construct(s, x, mid + 1, r);
 		up(x);
@@ -83,7 +83,7 @@ public class SplayTree{
 		}
 	}
 	
-	Node newNode(Node parent, int val){
+	Node createNode(Node parent, int val){
 		Node x = new Node();
 		x.c[0] = nullNode;
 		x.c[1] = nullNode;
@@ -200,16 +200,16 @@ public class SplayTree{
 	
 	void insert(int x, int P){
 		x += 2;
-		size++;
+		nodeIdx++;
 		select(x, nullNode);
 		select(x + 1, root);
-		root.c[1].c[0] = newNode(root.c[1], P);
+		root.c[1].c[0] = createNode(root.c[1], P);
 		splay(root.c[1].c[0], nullNode);
 	}
 	
 	void remove(int x){
 		x += 2;
-		size--;
+		nodeIdx--;
 		select(x - 1, nullNode);
 		select(x + 1, root);
 		root.c[1].c[0] = nullNode;

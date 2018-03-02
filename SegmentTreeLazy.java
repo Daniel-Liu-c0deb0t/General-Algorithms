@@ -8,8 +8,8 @@ public class SegmentTreeLazy{
 		int[] arr = {1, 2, 3, 4, 5};
 		SegmentTreeLazy st = new SegmentTreeLazy(arr.length);
 		st.construct(arr, 0, arr.length - 1, 0);
-		st.update(0, arr.length - 1, 1, 2, 0, 3);
-		System.out.println(st.query(0, arr.length - 1, 0, 2, 0));
+		st.update(0, arr.length - 1, 0, 4, 0, 3);
+		System.out.println(st.query(0, arr.length - 1, 0, 4, 0));
 	}
 	
 	SegmentTreeLazy(int n){
@@ -61,22 +61,30 @@ public class SegmentTreeLazy{
 		return seg[i];
 	}
 	
+	int construct(int l, int r, int i, int val){
+		if(l == r){
+			seg[i] = val;
+			return seg[i];
+		}
+		int m = (l + r) >>> 1;
+		seg[i] = combineQuery(construct(l, m, i * 2 + 1, val), construct(m + 1, r, i * 2 + 2, val));
+		return seg[i];
+	}
+	
 	int query(int l, int r, int ql, int qr, int i){
-		tag(l, r, i);
-		
 		if(r < ql || l > qr){
 			return emptyQuery;
 		}
 		if(l >= ql && qr >= r){
 			return seg[i];
 		}
+		tag(l, r, i);
+		
 		int m = (l + r) >>> 1;
 		return combineQuery(query(l, m, ql, qr, i * 2 + 1), query(m + 1, r, ql, qr, i * 2 + 2));
 	}
 	
 	void update(int l, int r, int ul, int ur, int i, int val){
-		tag(l, r, i);
-		
 		if(r < ul || l > ur || updateBreak(i, val)){
 			return;
 		}
@@ -88,6 +96,7 @@ public class SegmentTreeLazy{
 			}
 			return;
 		}
+		tag(l, r, i);
 		
 		int m = (l + r) >>> 1;
 		update(l, m, ul, ur, i * 2 + 1, val);

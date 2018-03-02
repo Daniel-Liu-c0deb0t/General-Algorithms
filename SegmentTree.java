@@ -45,6 +45,16 @@ public class SegmentTree{
 		return seg[i];
 	}
 	
+	int construct(int l, int r, int i, int val){
+		if(l == r){
+			seg[i] = val;
+			return seg[i];
+		}
+		int m = (l + r) >>> 1;
+		seg[i] = combineQuery(construct(l, m, i * 2 + 1, val), construct(m + 1, r, i * 2 + 2, val));
+		return seg[i];
+	}
+	
 	int query(int l, int r, int ql, int qr, int i){
 		if(l >= ql && qr >= r){
 			return seg[i];

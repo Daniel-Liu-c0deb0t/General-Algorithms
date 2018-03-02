@@ -2,8 +2,8 @@
 public class BinarySearch{
 	public static void main(String[] args){
 		int[] arr = {1, 3, 5, 5, 7, 9};
-		//will return out of bounds results if value is > than last or < than first
-		System.out.println(bSearch(arr, 10, false));
+		//no negative numbers in arr!
+		System.out.println(bSearch(arr, 5, false));
 		System.out.println(bSearchLower(arr, 10));
 		System.out.println(bSearch(arr, 8, true));
 		System.out.println(bSearchHigher(arr, 8));
@@ -28,13 +28,7 @@ public class BinarySearch{
 				}
 			}
 		}
-		if(res != -1)
-			return res;
-		if(upper){
-			return l;
-		}else{
-			return r;
-		}
+		return res;
 	}
 	
 	static int bSearchLower(int[] arr, int t){
