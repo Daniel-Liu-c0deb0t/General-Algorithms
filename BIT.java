@@ -20,6 +20,7 @@ public class BIT{
 		t3.update(2, 2);
 		t3.update(3, 1);
 		t3.update(5, 1);
+		//if first index is filled then result = 0
 		System.out.println(t3.floor(1)); //leftmost index where prefix sum = 1
 		System.out.println(t3.ceil(1)); //rightmost index where prefix sum = 1
 	}

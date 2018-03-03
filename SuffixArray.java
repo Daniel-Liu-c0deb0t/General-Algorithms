@@ -6,7 +6,7 @@ public class SuffixArray{
 	int[] lcp;
 	
 	public static void main(String[] args){
-		String str = "aabbcdaaccb`";
+		String str = "aabbcdaaccb";
 		SuffixArray s = new SuffixArray(str);
 		for(int i = 0; i < str.length(); i++){
 			System.out.println(str.substring(s.getSA(i)));
@@ -28,7 +28,7 @@ public class SuffixArray{
 	SuffixArray(String s){
 		sa = new Suffix[s.length()];
 		for(int i = 0; i < s.length(); i++){
-			sa[i] = new Suffix(i, s.charAt(i) - 'a' + 1, i + 1 < s.length() ? s.charAt(i + 1) - 'a' + 1 : 0);
+			sa[i] = new Suffix(i, s.charAt(i) + 1, i + 1 < s.length() ? s.charAt(i + 1) + 1 : 0);
 		}
 		
 		Arrays.sort(sa, (x, y) -> {
