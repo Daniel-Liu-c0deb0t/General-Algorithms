@@ -23,7 +23,10 @@ public class PersistentSegmentTree{
 		PersistentSegmentTree st2 = new PersistentSegmentTree(5);
 		v = st2.construct(0, 5 - 1, 0);
 		v = st2.update(0, 5 - 1, 1, v, 3);
+		int v2 = v;
 		v = st2.update(0, 5 - 1, 2, v, 2);
+		System.out.println(st2.query(0, 5 - 1, 0, 2, v));
+		v = st2.revert(0, 5 - 1, 0, 4, v, v2);
 		System.out.println(st2.query(0, 5 - 1, 0, 2, v));
 	}
 	
@@ -98,5 +101,17 @@ public class PersistentSegmentTree{
 			return createParent(update(l, m, ui, left[i], val), right[i]);
 		else
 			return createParent(left[i], update(m + 1, r, ui, right[i], val));
+	}
+	
+	//from version i to version j
+	int revert(int l, int r, int rl, int rr, int i, int j){
+		if(l >= rl && rr >= r){
+			return j;
+		}
+		if(r < rl || l > rr){
+			return i;
+		}
+		int m = (l + r) >>> 1;
+		return createParent(revert(l, m, rl, rr, left[i], left[j]), revert(m + 1, r, rl, rr, right[i], right[j]));
 	}
 }

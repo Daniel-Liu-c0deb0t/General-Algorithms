@@ -12,7 +12,10 @@ public class PersistentSegmentTreeLazy{
 		int v = -1;
 		PersistentSegmentTreeLazy st = new PersistentSegmentTreeLazy(arr.length);
 		v = st.construct(arr, 0, arr.length - 1);
+		int v2 = v;
 		v = st.update(0, arr.length - 1, 0, 4, v, 3);
+		System.out.println(st.query(0, arr.length - 1, 0, 4, v));
+		v = st.revert(0, arr.length - 1, 0, 2, v, v2);
 		System.out.println(st.query(0, arr.length - 1, 0, 4, v));
 	}
 	
@@ -123,5 +126,19 @@ public class PersistentSegmentTreeLazy{
 		
 		int m = (l + r) >>> 1;
 		return createParent(update(l, m, ul, ur, left[i], val), update(m + 1, r, ul, ur, right[i], val));
+	}
+	
+	//from version i to version j
+	int revert(int l, int r, int rl, int rr, int i, int j){
+		if(l >= rl && rr >= r){
+			return j;
+		}
+		if(r < rl || l > rr){
+			return i;
+		}
+		tag(l, r, i);
+		
+		int m = (l + r) >>> 1;
+		return createParent(revert(l, m, rl, rr, left[i], left[j]), revert(m + 1, r, rl, rr, right[i], right[j]));
 	}
 }
