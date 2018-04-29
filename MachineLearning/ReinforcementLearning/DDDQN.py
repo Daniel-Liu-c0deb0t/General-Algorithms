@@ -9,7 +9,7 @@ from gridworld import gameEnv
 import random
 
 # testing or training?
-is_testing = False
+is_testing = True
 
 # hyperparameters
 learn_rate = 0.0001
@@ -250,8 +250,9 @@ def test(sess):
         ep_reward = 0.0
         steps = 0
 
-        # unfortunately cannot render right now...
         for steps in range(1, episode_steps + 1):
+            env.renderEnv(True)
+
             if random.random() < e_greedy_test:
                 action = random.randrange(num_actions)
             else:

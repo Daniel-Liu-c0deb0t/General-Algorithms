@@ -25,7 +25,8 @@ class gameEnv():
         self.partial = partial
         self.keepGoing = keepGoing
         a = self.reset()
-        #plt.imshow(a, interpolation="nearest")
+        self.drawn = False
+        self.img_data = None
 
     def reset(self):
         self.objects = []
@@ -98,7 +99,7 @@ class gameEnv():
                 return other.reward, not self.keepGoing
         return 0.0, False
 
-    def renderEnv(self):
+    def renderEnv(self, draw = False):
         # a = np.zeros([self.sizeY,self.sizeX,3])
         a = np.ones([self.sizeY + 2, self.sizeX + 2, 3])
         a[1:-1, 1:-1, :] = 0
@@ -113,6 +114,18 @@ class gameEnv():
         c = scipy.misc.imresize(a[:, :, 1], [84, 84, 1], interp='nearest')
         d = scipy.misc.imresize(a[:, :, 2], [84, 84, 1], interp='nearest')
         a = np.stack([b, c, d], axis=2)
+
+        if draw:
+            if self.drawn:
+                self.img_data.set_data(a)
+                plt.draw()
+            else:
+                plt.ion()
+                self.drawn = True
+                self.img_data = plt.imshow(a, interpolation = "nearest")
+                plt.show()
+            plt.pause(0.1)
+
         return a
 
     def step(self, action):

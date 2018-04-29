@@ -11,7 +11,9 @@ The environment is a simple implementation of a grid with red (score of -1) and 
 ### References
 [Medium post on DDDQNs](https://medium.com/@awjuliani/simple-reinforcement-learning-with-tensorflow-part-4-deep-q-networks-and-beyond-8438a3e2b8df)
 
-Actually, the whole series of posts helped me understand reinforcement learning. I recommend reading them.
+[The author's code](https://github.com/awjuliani/DeepRL-Agents)
+
+Actually, the whole series of posts helped me understand reinforcement learning. The source code is also available and it helped me learn TensorFlow. I recommend reading the posts.
 
 [Implementation with TensorFlow + TFLearn](https://github.com/gokhanettin/dddqn-tf)
 
