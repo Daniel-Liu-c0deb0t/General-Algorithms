@@ -288,6 +288,7 @@ def test(sess):
 
             next_state, reward, done = env.step(action)
             ep_reward += reward
+            curr_state = next_state
 
             if done:
                 break
