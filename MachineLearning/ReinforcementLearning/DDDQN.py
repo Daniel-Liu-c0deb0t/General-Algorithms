@@ -52,7 +52,7 @@ def to_flat_state(state):
     shape = np_state.shape
     return np.reshape(state, [shape[0], shape[1] * shape[2] * shape[3]]) / 255.0
 
-def clip_loss(loss):
+def huber_loss(loss):
     return tf.where(tf.abs(loss) < 1.0, 0.5 * tf.square(loss), tf.abs(loss) - 0.5)
 
 def to_priority(error):
@@ -102,6 +102,7 @@ def create_graph(num_actions):
     next_state, target_q_values = create_model(num_actions)
     target_params = tf.trainable_variables()[len(online_params):]
 
+    # updates the target network towards the online network
     update_target_smooth = []
     for i in range(len(target_params)):
         update_target_smooth.append(target_params[i].assign(tau * target_params[i] + (1 - tau) * online_params[i]))
@@ -113,7 +114,7 @@ def create_graph(num_actions):
     target = tf.placeholder(tf.float32, [None])
     action = tf.placeholder(tf.int32, [None])
     one_hot_action = tf.one_hot(action, num_actions, dtype = tf.float32)
-    loss = tf.reduce_mean(clip_loss(target - tf.reduce_sum(online_q_values * one_hot_action, 1)))
+    loss = tf.reduce_mean(huber_loss(target - tf.reduce_sum(online_q_values * one_hot_action, 1)))
 
     optimizer = tf.train.AdamOptimizer(learning_rate = learn_rate)
     update_online = optimizer.minimize(loss, var_list = online_params)
@@ -164,7 +165,7 @@ def train(sess):
 
             next_state, reward, done = env.step(action)
             ep_reward += reward
-            error = abs(reward)
+            error = abs(reward) # default error is reward
 
             if total_steps > num_rand_steps:
                 if e_greedy_curr > e_greedy_end:
@@ -187,28 +188,33 @@ def train(sess):
                         online_q_values = sess.run(op_online_q_values,
                                                    feed_dict = {op_curr_state: to_flat_state([curr_state])})
 
+                    # calculate the error for the current (s, a, r, s', d)
                     online_next_q = sess.run(op_online_q_values,
                                              feed_dict = {op_curr_state: to_flat_state([next_state])})
                     target_next_q = sess.run(op_target_q_values,
                                              feed_dict = {op_next_state: to_flat_state([next_state])})
                     double_q_value = target_next_q[0][np.argmax(online_next_q)]
                     target = reward + (gamma * double_q_value * (1 - done))
-                    error = abs(online_q_values[0][action] - target)
+                    error = abs(target - online_q_values[0][action])
 
+                    # calculate the batch targets for training and the errors
                     batch_online_q = sess.run(op_online_q_values, feed_dict = {op_curr_state: batch_state})
                     actions = np.argmax(batch_online_q, 1)
                     batch_target_q = sess.run(op_target_q_values, feed_dict = {op_next_state: batch_state})
                     batch_double_q = batch_target_q[range(batch_size), actions]
                     target = batch_reward + (gamma * batch_double_q * (1 - batch_done))
-                    errors = abs(batch_online_q[range(batch_size), actions] - target)
+                    errors = abs(target - batch_online_q[range(batch_size), actions])
 
+                    # update the priorities for the batch elements with new errors
                     for i in range(batch_size):
                         exp_buffer.update(idx[i], errors[i])
 
+                    # train online model
                     sess.run(op_update_online, feed_dict = {op_curr_state: batch_prev_state,
                                                             op_action: batch_action,
                                                             op_target: target})
                 else:
+                    # just update online model with target values
                     batch_online_q = sess.run(op_online_q_values, feed_dict = {op_curr_state: batch_state})
                     actions = np.argmax(batch_online_q, 1)
                     batch_target_q = sess.run(op_target_q_values, feed_dict = {op_next_state: batch_state})
