@@ -52,7 +52,7 @@ class PriorityBuffer:
         res = []
         idx = []
         for i in range(num):
-            # get random experiences using random integers less than the sum of all priorities
+            # get random experiences using random numbers less than the sum of all priorities
             j = self.get(0, random.uniform(0, self.priority[0]))
             idx.append(j)
             res.append(self.buffer[j - self.size + 1])
