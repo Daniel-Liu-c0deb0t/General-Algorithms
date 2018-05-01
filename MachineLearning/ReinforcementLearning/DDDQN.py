@@ -1,4 +1,4 @@
-from collections import deque
+import ExperienceReplay
 import time
 import datetime
 import os
@@ -9,17 +9,16 @@ from gridworld import gameEnv
 import random
 
 # testing or training?
-is_testing = True
+is_testing = False
 
 # hyperparameters
 learn_rate = 0.0001
 num_noops = 5
-num_rand_steps = 1000 # must be greater than batch size
+num_rand_steps = 10000 # must be greater than batch size
 total_episodes = 10000
 episode_steps = 50
 
 target_update_freq = 1000
-online_update_freq = 4
 print_freq = 10
 
 img_width = 84
@@ -31,6 +30,9 @@ gamma = 0.99
 
 batch_size = 32
 exp_buffer_size = 10000
+priority_replay = True
+priority_e = 0.01
+priority_a = 0.6
 
 # controls annealing rate for epsilon greedy
 e_greedy_start = 1.0
@@ -45,19 +47,6 @@ load_path = "./dddqn_model_saves/dddqn_model_final.ckpt"
 e_greedy_diff = (e_greedy_start - e_greedy_end) / e_greedy_steps
 os.makedirs(save_path, exist_ok = True)
 
-# very simple experience buffer to get random samples
-class ExperienceBuffer:
-    def __init__(self, size):
-        self.size = size
-        self.buffer = deque(maxlen = size)
-
-    def append(self, exp):
-        self.buffer.append(exp)
-
-    def sample(self, num):
-        res = np.array(random.sample(self.buffer, num))
-        return np.stack(res[:, 0]), res[:, 1], res[:, 2], np.stack(res[:, 3]), res[:, 4]
-
 def to_flat_state(state):
     np_state = np.array(state)
     shape = np_state.shape
@@ -65,6 +54,9 @@ def to_flat_state(state):
 
 def clip_loss(loss):
     return tf.where(tf.abs(loss) < 1.0, 0.5 * tf.square(loss), tf.abs(loss) - 0.5)
+
+def to_priority(error):
+    return (error + priority_e) ** priority_a
 
 def create_env():
     return gameEnv(False, 7, False)
@@ -118,7 +110,6 @@ def create_graph(num_actions):
     for i in range(len(target_params)):
         update_target.append(target_params[i].assign(online_params[i]))
 
-    predict_action = tf.argmax(online_q_values, 1)
     target = tf.placeholder(tf.float32, [None])
     action = tf.placeholder(tf.int32, [None])
     one_hot_action = tf.one_hot(action, num_actions, dtype = tf.float32)
@@ -127,15 +118,15 @@ def create_graph(num_actions):
     optimizer = tf.train.AdamOptimizer(learning_rate = learn_rate)
     update_online = optimizer.minimize(loss, var_list = online_params)
 
-    return curr_state, online_q_values, predict_action, target, action, \
+    return curr_state, online_q_values, target, action, \
            update_online, next_state, target_q_values, update_target, update_target_smooth
 
 def train(sess):
     env = create_env()
     num_actions = env.actions
 
-    op_curr_state, op_online_q_values, op_predict_action, op_target, op_action, \
-    op_update_online, op_next_state, op_target_q_values, op_update_target, op_update_target_smooth = create_graph(num_actions)
+    op_curr_state, op_online_q_values, op_target, op_action, op_update_online, \
+    op_next_state, op_target_q_values, op_update_target, op_update_target_smooth = create_graph(num_actions)
 
     saver = tf.train.Saver()
 
@@ -144,7 +135,11 @@ def train(sess):
     sess.run(op_update_target)
 
     e_greedy_curr = e_greedy_start
-    exp_buffer = ExperienceBuffer(exp_buffer_size)
+
+    if priority_replay:
+        exp_buffer = ExperienceReplay.PriorityBuffer(exp_buffer_size)
+    else:
+        exp_buffer = ExperienceReplay.UniformBuffer(exp_buffer_size)
 
     total_steps = 0
     reward_list = []
@@ -158,17 +153,18 @@ def train(sess):
         for steps in range(1, episode_steps + 1):
             total_steps += 1
 
+            online_q_values = None
             # epsilon greedy action selection
             if total_steps <= num_rand_steps or random.random() < e_greedy_curr:
                 action = random.randrange(num_actions)
             else:
-                online_q_values = sess.run(op_online_q_values, feed_dict = {op_curr_state: to_flat_state([curr_state])})
+                online_q_values = sess.run(op_online_q_values,
+                                           feed_dict = {op_curr_state: to_flat_state([curr_state])})
                 action = np.argmax(online_q_values)
 
             next_state, reward, done = env.step(action)
             ep_reward += reward
-
-            exp_buffer.append([curr_state, action, reward, next_state, done])
+            error = abs(reward)
 
             if total_steps > num_rand_steps:
                 if e_greedy_curr > e_greedy_end:
@@ -180,21 +176,52 @@ def train(sess):
 
                 # update online model (more frequent)
                 # double q network approach
-                if total_steps % online_update_freq == 0:
-                    # gets a batch of randomly selected experiences
-                    batch = exp_buffer.sample(batch_size)
-                    batch_prev_state, batch_action, batch_reward, batch_state, batch_done = batch
-                    batch_prev_state = to_flat_state(batch_prev_state)
-                    batch_state = to_flat_state(batch_state)
+                # gets a batch of randomly selected experiences
+                idx, batch = exp_buffer.sample(batch_size)
+                batch_prev_state, batch_action, batch_reward, batch_state, batch_done = batch
+                batch_prev_state = to_flat_state(batch_prev_state)
+                batch_state = to_flat_state(batch_state)
 
-                    actions = sess.run(op_predict_action, feed_dict = {op_curr_state: batch_state})
-                    target_q_values = sess.run(op_target_q_values, feed_dict = {op_next_state: batch_state})
-                    double_q_values = target_q_values[range(batch_size), actions]
-                    not_done = -(batch_done - 1)
-                    target = batch_reward + (gamma * double_q_values * not_done)
+                if priority_replay:
+                    if online_q_values is None:
+                        online_q_values = sess.run(op_online_q_values,
+                                                   feed_dict = {op_curr_state: to_flat_state([curr_state])})
+
+                    online_next_q = sess.run(op_online_q_values,
+                                             feed_dict = {op_curr_state: to_flat_state([next_state])})
+                    target_next_q = sess.run(op_target_q_values,
+                                             feed_dict = {op_next_state: to_flat_state([next_state])})
+                    double_q_value = target_next_q[0][np.argmax(online_next_q)]
+                    target = reward + (gamma * double_q_value * (1 - done))
+                    error = abs(online_q_values[0][action] - target)
+
+                    batch_online_q = sess.run(op_online_q_values, feed_dict = {op_curr_state: batch_state})
+                    actions = np.argmax(batch_online_q, 1)
+                    batch_target_q = sess.run(op_target_q_values, feed_dict = {op_next_state: batch_state})
+                    batch_double_q = batch_target_q[range(batch_size), actions]
+                    target = batch_reward + (gamma * batch_double_q * (1 - batch_done))
+                    errors = abs(batch_online_q[range(batch_size), actions] - target)
+
+                    for i in range(batch_size):
+                        exp_buffer.update(idx[i], errors[i])
+
                     sess.run(op_update_online, feed_dict = {op_curr_state: batch_prev_state,
                                                             op_action: batch_action,
                                                             op_target: target})
+                else:
+                    batch_online_q = sess.run(op_online_q_values, feed_dict = {op_curr_state: batch_state})
+                    actions = np.argmax(batch_online_q, 1)
+                    batch_target_q = sess.run(op_target_q_values, feed_dict = {op_next_state: batch_state})
+                    batch_double_q = batch_target_q[range(batch_size), actions]
+                    target = batch_reward + (gamma * batch_double_q * (1 - batch_done))
+                    sess.run(op_update_online, feed_dict = {op_curr_state: batch_prev_state,
+                                                            op_action: batch_action,
+                                                            op_target: target})
+
+            if priority_replay:
+                exp_buffer.append([curr_state, action, reward, next_state, done], to_priority(error))
+            else:
+                exp_buffer.append([curr_state, action, reward, next_state, done])
 
             curr_state = next_state
 
@@ -238,8 +265,8 @@ def test(sess):
     env = create_env()
     num_actions = env.actions
 
-    op_curr_state, op_online_q_values, op_predict_action, op_target, op_action, \
-    op_update_online, op_next_state, op_target_q_values, op_update_target, op_update_target_smooth = create_graph(num_actions)
+    op_curr_state, op_online_q_values, op_target, op_action, op_update_online, \
+    op_next_state, op_target_q_values, op_update_target, op_update_target_smooth = create_graph(num_actions)
 
     saver = tf.train.Saver()
     saver.restore(sess, load_path)
@@ -256,7 +283,7 @@ def test(sess):
             if random.random() < e_greedy_test:
                 action = random.randrange(num_actions)
             else:
-                online_q_values = sess.run(op_online_q_values, feed_dict={op_curr_state: to_flat_state([curr_state])})
+                online_q_values = sess.run(op_online_q_values, feed_dict = {op_curr_state: to_flat_state([curr_state])})
                 action = np.argmax(online_q_values)
 
             next_state, reward, done = env.step(action)

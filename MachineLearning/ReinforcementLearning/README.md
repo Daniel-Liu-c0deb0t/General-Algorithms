@@ -6,6 +6,8 @@ Implementation of a Dueling Double Deep Q Network using TensorFlow. It also depe
 
 It uses three convolution layers and two layers each for the advantage and the value calculation. Two networks are used for double Q learning. The learning algorthm uses an e-greedy approach to pick the best action for each state (exploitation), with a random chance of picking a random action (exploration). The epsilon value is annealed over time. Simple experience replay that allows previous experiences to be sampled is implemented.
 
+Edit: Prioritized experience replay with a "sum tree" is implemented. The sum tree is basically an embedded binary tree that allows for efficient sampling and insertion. The sum tree shows similarities with segment trees.
+
 The environment is a simple implementation of a grid with red (score of -1) and green (score of 1) blocks. The goal is to reach the green blocks by moving the blue character. Naturally, the four movement directions (available actions) are up, down, left, and right. I did not write the environment by myself, but I made a few edits.
 
 ### References
@@ -20,3 +22,5 @@ Actually, the whole series of posts helped me understand reinforcement learning.
 [Deep Reinforcement Learning with Double Q-Learning](https://arxiv.org/pdf/1509.06461v3.pdf)
 
 [Dueling Network Architectures for Deep Reinforcement Learning](https://arxiv.org/pdf/1511.06581.pdf)
+
+[Blog post on prioritized experience replay](https://jaromiru.com/2016/11/07/lets-make-a-dqn-double-learning-and-prioritized-experience-replay/)
