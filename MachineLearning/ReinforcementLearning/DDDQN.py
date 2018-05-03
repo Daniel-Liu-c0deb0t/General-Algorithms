@@ -59,7 +59,7 @@ def to_priority(error):
     return (error + priority_e) ** priority_a
 
 def create_env():
-    return gameEnv(False, 7, False)
+    return gameEnv(False, 5, True)
 
 def reset_env(env):
     noops = random.randrange(num_noops)
