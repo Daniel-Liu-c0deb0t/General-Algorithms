@@ -13,8 +13,7 @@ is_testing = False
 
 # hyperparameters
 learn_rate = 0.0001
-num_noops = 5
-num_rand_steps = 10000 # must be greater than batch size
+num_noops = 3
 total_episodes = 10000
 episode_steps = 50
 
@@ -29,6 +28,7 @@ tau = 0.001
 gamma = 0.99
 
 batch_size = 32
+# will take random steps in the beginning to fill buffer
 exp_buffer_size = 10000
 priority_replay = True
 priority_e = 0.01
@@ -41,8 +41,8 @@ e_greedy_steps = 10000
 e_greedy_test = 0.1
 
 save_freq = 1000
-save_path = "./dddqn_model_saves"
-load_path = "./dddqn_model_saves/dddqn_model_final.ckpt"
+save_path = "./dddqn_saves_priority"
+load_path = "./dddqn_saves_priority/dddqn_model_final.ckpt"
 
 e_greedy_diff = (e_greedy_start - e_greedy_end) / e_greedy_steps
 os.makedirs(save_path, exist_ok = True)
@@ -156,7 +156,7 @@ def train(sess):
 
             online_q_values = None
             # epsilon greedy action selection
-            if total_steps <= num_rand_steps or random.random() < e_greedy_curr:
+            if total_steps <= batch_size or random.random() < e_greedy_curr:
                 action = random.randrange(num_actions)
             else:
                 online_q_values = sess.run(op_online_q_values,
@@ -167,7 +167,7 @@ def train(sess):
             ep_reward += reward
             error = abs(reward) # default error is reward
 
-            if total_steps > num_rand_steps:
+            if total_steps > batch_size:
                 if e_greedy_curr > e_greedy_end:
                     e_greedy_curr -= e_greedy_diff
 
@@ -238,7 +238,7 @@ def train(sess):
         step_list.append(steps)
 
         if episode % print_freq == 0:
-            print("is pre training:", total_steps <= num_rand_steps,
+            print("is pre training:", total_steps <= batch_size,
                   "| ep:", episode,
                   "| step:", total_steps,
                   "| avg reward:", np.mean(reward_list[-print_freq:]),
@@ -265,6 +265,7 @@ def train(sess):
     plt.xlabel("Ep")
     plt.ylabel("Average Ep Length Per " + str(skip) + " Ep")
 
+    plt.savefig(save_path + "/dddqn_train_result.png")
     plt.show()
 
 def test(sess):
@@ -302,7 +303,7 @@ def test(sess):
         print("ep reward:", ep_reward, "| ep length:", steps)
 
 if __name__ == "__main__":
-    start = time.process_time()
+    start = time.perf_counter()
 
     if is_testing:
         print("Started testing.")
@@ -321,4 +322,4 @@ if __name__ == "__main__":
 
         print("Ended training.")
 
-    print("End time:", datetime.timedelta(seconds = time.process_time() - start))
+    print("Total time:", datetime.timedelta(seconds = time.perf_counter() - start))

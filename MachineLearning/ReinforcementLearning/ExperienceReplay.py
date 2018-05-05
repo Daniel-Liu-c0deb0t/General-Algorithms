@@ -43,7 +43,7 @@ class PriorityBuffer:
     def update_diff(self, idx, diff):
         self.priority[idx] += diff
         if idx > 0:
-            self.update_diff(idx // 2, diff)
+            self.update_diff((idx - 1) // 2, diff)
 
     def update(self, idx, priority):
         self.update_diff(idx, priority - self.priority[idx])
@@ -53,7 +53,8 @@ class PriorityBuffer:
         idx = []
         for i in range(num):
             # get random experiences using random numbers less than the sum of all priorities
-            j = self.get(0, random.uniform(0, self.priority[0]))
+            rand = random.uniform(0, self.priority[0])
+            j = self.get(0, rand)
             idx.append(j)
             res.append(self.buffer[j - self.size + 1])
         res = np.array(res)
@@ -68,4 +69,15 @@ class PriorityBuffer:
         if priority <= self.priority[lo]:
             return self.get(lo, priority)
         else:
-            return self.get(hi, priority - self.priority[idx])
+            return self.get(hi, priority - self.priority[lo])
+
+if __name__ == "__main__":
+    b = PriorityBuffer(5)
+    b.append([1] * 5, 0.1)
+    b.append([2] * 5, 1)
+    b.append([3] * 5, 1)
+    b.append([4] * 5, 1)
+    b.append([5] * 5, 1)
+    b.append([6] * 5, 5)
+    for _ in range(10):
+        print(b.sample(2))
