@@ -156,7 +156,7 @@ def train(sess):
 
             online_q_values = None
             # epsilon greedy action selection
-            if total_steps <= batch_size or random.random() < e_greedy_curr:
+            if total_steps <= exp_buffer_size or random.random() < e_greedy_curr:
                 action = random.randrange(num_actions)
             else:
                 online_q_values = sess.run(op_online_q_values,
@@ -167,7 +167,7 @@ def train(sess):
             ep_reward += reward
             error = abs(reward) # default error is reward
 
-            if total_steps > batch_size:
+            if total_steps > exp_buffer_size:
                 if e_greedy_curr > e_greedy_end:
                     e_greedy_curr -= e_greedy_diff
 
@@ -238,7 +238,7 @@ def train(sess):
         step_list.append(steps)
 
         if episode % print_freq == 0:
-            print("is pre training:", total_steps <= batch_size,
+            print("is pre training:", total_steps <= exp_buffer_size,
                   "| ep:", episode,
                   "| step:", total_steps,
                   "| avg reward:", np.mean(reward_list[-print_freq:]),
