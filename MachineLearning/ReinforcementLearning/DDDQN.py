@@ -12,12 +12,12 @@ import random
 is_testing = False
 
 # hyperparameters
-learn_rate = 0.0001
+learn_rate = 0.00025
 num_noops = 3
-total_episodes = 3000
-episode_steps = 30
+total_episodes = 5000
+episode_steps = 50
 
-target_update_freq = 1000
+target_update_freq = 5000
 print_freq = 10
 
 img_width = 84
@@ -40,7 +40,7 @@ e_greedy_end = 0.1
 e_greedy_steps = 10000
 e_greedy_test = 0.1
 
-save_freq = 500
+save_freq = 1000
 save_path = "./dddqn_saves_priority"
 load_path = "./dddqn_saves_priority/dddqn_model_final.ckpt"
 

@@ -33,11 +33,11 @@ class gameEnv():
         hero = gameOb(self.newPosition(), 1, 1, 2, None, 'hero')
         self.objects.append(hero)
 
-        for i in range(5):
+        for i in range(3):
             fire = gameOb(self.newPosition(), 1, 1, 0, -1, 'fire')
             self.objects.append(fire)
 
-        for i in range(3):
+        for i in range(2):
             goal = gameOb(self.newPosition(), 1, 1, 1, 1, 'goal')
             self.objects.append(goal)
 
