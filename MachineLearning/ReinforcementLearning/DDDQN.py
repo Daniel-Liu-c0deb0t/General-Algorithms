@@ -14,8 +14,8 @@ is_testing = False
 # hyperparameters
 learn_rate = 0.0001
 num_noops = 3
-total_episodes = 10000
-episode_steps = 50
+total_episodes = 3000
+episode_steps = 30
 
 target_update_freq = 1000
 print_freq = 10
@@ -40,7 +40,7 @@ e_greedy_end = 0.1
 e_greedy_steps = 10000
 e_greedy_test = 0.1
 
-save_freq = 1000
+save_freq = 500
 save_path = "./dddqn_saves_priority"
 load_path = "./dddqn_saves_priority/dddqn_model_final.ckpt"
 
@@ -123,6 +123,8 @@ def create_graph(num_actions):
            update_online, next_state, target_q_values, update_target, update_target_smooth
 
 def train(sess):
+    start = time.perf_counter()
+
     env = create_env()
     num_actions = env.actions
 
@@ -251,6 +253,8 @@ def train(sess):
     saver.save(sess, save_path + "/dddqn_model_final.ckpt")
     print("Saved final model!")
 
+    print("Total time:", datetime.timedelta(seconds = time.perf_counter() - start))
+
     skip = 100
     reward_avg = np.average(np.reshape(reward_list, [len(reward_list) // skip, skip]), 1)
     step_avg = np.average(np.reshape(step_list, [len(step_list) // skip, skip]), 1)
@@ -303,8 +307,6 @@ def test(sess):
         print("ep reward:", ep_reward, "| ep length:", steps)
 
 if __name__ == "__main__":
-    start = time.perf_counter()
-
     if is_testing:
         print("Started testing.")
 
@@ -321,5 +323,3 @@ if __name__ == "__main__":
             train(sess)
 
         print("Ended training.")
-
-    print("Total time:", datetime.timedelta(seconds = time.perf_counter() - start))

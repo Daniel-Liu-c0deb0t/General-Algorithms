@@ -32,18 +32,15 @@ class gameEnv():
         self.objects = []
         hero = gameOb(self.newPosition(), 1, 1, 2, None, 'hero')
         self.objects.append(hero)
-        bug = gameOb(self.newPosition(), 1, 1, 1, 1, 'goal')
-        self.objects.append(bug)
-        hole = gameOb(self.newPosition(), 1, 1, 0, -1, 'fire')
-        self.objects.append(hole)
-        bug2 = gameOb(self.newPosition(), 1, 1, 1, 1, 'goal')
-        self.objects.append(bug2)
-        hole2 = gameOb(self.newPosition(), 1, 1, 0, -1, 'fire')
-        self.objects.append(hole2)
-        #bug3 = gameOb(self.newPosition(), 1, 1, 1, 1, 'goal')
-        #self.objects.append(bug3)
-        #bug4 = gameOb(self.newPosition(), 1, 1, 1, 1, 'goal')
-        #self.objects.append(bug4)
+
+        for i in range(5):
+            fire = gameOb(self.newPosition(), 1, 1, 0, -1, 'fire')
+            self.objects.append(fire)
+
+        for i in range(3):
+            goal = gameOb(self.newPosition(), 1, 1, 1, 1, 'goal')
+            self.objects.append(goal)
+
         state = self.renderEnv()
         self.state = state
         return state
@@ -124,7 +121,7 @@ class gameEnv():
                 self.drawn = True
                 self.img_data = plt.imshow(a, interpolation = "nearest")
                 plt.show()
-            plt.pause(0.2)
+            plt.pause(0.1)
 
         return a
 
