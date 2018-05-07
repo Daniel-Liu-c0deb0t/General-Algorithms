@@ -4,15 +4,17 @@
 ### Description
 Implementation of a Dueling Double Deep Q Network using TensorFlow. It also depends on Numpy and Matplotlib.
 
-It uses three convolution layers and two layers each for the advantage and the value calculation. Two networks are used for double Q learning. The learning algorthm uses an e-greedy approach to pick the best action for each state (exploitation), with a random chance of picking a random action (exploration). The epsilon value is annealed over time. Simple experience replay that allows previous experiences to be sampled is implemented.
+It uses three convolution layers and two layers each for the advantage and the value calculation. Two networks are used for double Q learning. The learning algorthm uses an e-greedy approach to pick the best action for each state (exploitation), with a random chance of picking a random action (exploration). The epsilon value is annealed over time.
 
-Edit: Prioritized experience replay with a "sum tree" is implemented. The sum tree is basically an embedded binary tree that allows for efficient sampling and insertion. The sum tree shows similarities with segment trees.
+There are two experience replay algorithms/data structures implemented. One is a simple buffer that allows previous experiences to be uniformly sampled. Another one is proportional prioritized experience replay, using a "sum tree". The sum tree is basically an embedded binary tree that allows for efficient sampling and insertion. It allows experiences that have higher errors to have a higher probability of being sampled. The sum tree shows similarities with segment trees.
 
 The environment is a simple implementation of a grid with red (score of -1) and green (score of 1) blocks. The goal is to reach the green blocks by moving the blue character. Naturally, the four movement directions (available actions) are up, down, left, and right. I did not write the environment by myself, but I made a few edits.
 
 I've uploaded my pretrained parameters. Here is a graph of how it performed:
 
 ![Graph](dddqn_saves_priority/dddqn_train_result.png "Training results.")
+
+And a YouTube video demostrating the result is available [here](https://www.youtube.com/watch?v=l0HVuekufnI).
 
 I had to play around with the hyperparameters to get that result. I'm pretty satisfied, although the result is probably far from perfect. To run with the pretrained weights, make sure that the `is_testing` parameter is set to `True` in the code. Also make sure that the `load_path` is set to the correct file.
 
