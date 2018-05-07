@@ -10,6 +10,12 @@ Edit: Prioritized experience replay with a "sum tree" is implemented. The sum tr
 
 The environment is a simple implementation of a grid with red (score of -1) and green (score of 1) blocks. The goal is to reach the green blocks by moving the blue character. Naturally, the four movement directions (available actions) are up, down, left, and right. I did not write the environment by myself, but I made a few edits.
 
+I've uploaded my pretrained parameters. Here is a graph of how it performed:
+
+![Graph](ReinforcementLearning/dddqn_saves_priority/dddqn_train_result.png "Training results.")
+
+I had to play around with the hyperparameters to get that result. I'm pretty satisfied, although the result is probably far from perfect.
+
 ### References
 [Medium post on DDDQNs](https://medium.com/@awjuliani/simple-reinforcement-learning-with-tensorflow-part-4-deep-q-networks-and-beyond-8438a3e2b8df)
 
