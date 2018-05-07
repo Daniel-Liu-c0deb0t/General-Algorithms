@@ -12,7 +12,7 @@ The environment is a simple implementation of a grid with red (score of -1) and 
 
 I've uploaded my pretrained parameters. Here is a graph of how it performed:
 
-![Graph](ReinforcementLearning/dddqn_saves_priority/dddqn_train_result.png "Training results.")
+![Graph](dddqn_saves_priority/dddqn_train_result.png "Training results.")
 
 I had to play around with the hyperparameters to get that result. I'm pretty satisfied, although the result is probably far from perfect.
 
