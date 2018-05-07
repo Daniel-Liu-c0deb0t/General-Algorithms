@@ -14,7 +14,7 @@ I've uploaded my pretrained parameters. Here is a graph of how it performed:
 
 ![Graph](dddqn_saves_priority/dddqn_train_result.png "Training results.")
 
-I had to play around with the hyperparameters to get that result. I'm pretty satisfied, although the result is probably far from perfect.
+I had to play around with the hyperparameters to get that result. I'm pretty satisfied, although the result is probably far from perfect. To run with the pretrained weights, make sure that the `is_testing` parameter is set to `True` in the code. Also make sure that the `load_path` is set to the correct file.
 
 ### References
 [Medium post on DDDQNs](https://medium.com/@awjuliani/simple-reinforcement-learning-with-tensorflow-part-4-deep-q-networks-and-beyond-8438a3e2b8df)
