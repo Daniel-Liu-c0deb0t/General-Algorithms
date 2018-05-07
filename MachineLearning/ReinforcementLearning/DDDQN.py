@@ -14,7 +14,7 @@ is_testing = False
 # hyperparameters
 learn_rate = 0.00025
 num_noops = 3
-total_episodes = 5000
+total_episodes = 3500
 episode_steps = 50
 
 target_update_freq = 5000
@@ -29,7 +29,7 @@ gamma = 0.99
 
 batch_size = 32
 # will take random steps in the beginning to fill buffer
-exp_buffer_size = 10000
+exp_buffer_size = 50000
 priority_replay = True
 priority_e = 0.01
 priority_a = 0.6
@@ -37,7 +37,7 @@ priority_a = 0.6
 # controls annealing rate for epsilon greedy
 e_greedy_start = 1.0
 e_greedy_end = 0.1
-e_greedy_steps = 10000
+e_greedy_steps = 100000
 e_greedy_test = 0.1
 
 save_freq = 1000
@@ -131,7 +131,7 @@ def train(sess):
     op_curr_state, op_online_q_values, op_target, op_action, op_update_online, \
     op_next_state, op_target_q_values, op_update_target, op_update_target_smooth = create_graph(num_actions)
 
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(max_to_keep = None)
 
     sess.run(tf.global_variables_initializer())
 
