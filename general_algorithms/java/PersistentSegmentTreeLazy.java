@@ -106,23 +106,27 @@ public class PersistentSegmentTreeLazy{
 		if(r < ql || l > qr){
 			return emptyQuery;
 		}
+		
+		tag(l, r, i);
+		
 		if(l >= ql && qr >= r){
 			return seg[i];
 		}
-		tag(l, r, i);
 		
 		int m = (l + r) >>> 1;
 		return combineQuery(query(l, m, ql, qr, left[i]), query(m + 1, r, ql, qr, right[i]));
 	}
 	
 	int update(int l, int r, int ul, int ur, int i, int val){
+		tag(l, r, i);
+		
 		if(r < ul || l > ur || updateBreak(i, val)){
 			return i;
 		}
+		
 		if(l >= ul && r <= ur && updateCondition(i, val)){
 			return createLazyChild(l, r, i, val);
 		}
-		tag(l, r, i);
 		
 		int m = (l + r) >>> 1;
 		return createParent(update(l, m, ul, ur, left[i], val), update(m + 1, r, ul, ur, right[i], val));
@@ -130,13 +134,15 @@ public class PersistentSegmentTreeLazy{
 	
 	//from version i to version j
 	int revert(int l, int r, int rl, int rr, int i, int j){
+		tag(l, r, i);
+		
 		if(l >= rl && rr >= r){
 			return j;
 		}
+		
 		if(r < rl || l > rr){
 			return i;
 		}
-		tag(l, r, i);
 		
 		int m = (l + r) >>> 1;
 		return createParent(revert(l, m, rl, rr, left[i], left[j]), revert(m + 1, r, rl, rr, right[i], right[j]));

@@ -6,6 +6,9 @@ public class SuffixArray{
 	int[] lcp;
 	
 	public static void main(String[] args){
+		// use different different chars to separate strings
+		// example: abc#cba
+		// LCP array contains longest common prefix between sa[i] and sa[i + 1]
 		String str = "aabbcdaaccb";
 		SuffixArray s = new SuffixArray(str);
 		for(int i = 0; i < str.length(); i++){

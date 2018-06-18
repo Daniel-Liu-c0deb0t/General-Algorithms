@@ -9,6 +9,7 @@ public class SegmentTreeLazy{
 		SegmentTreeLazy st = new SegmentTreeLazy(arr.length);
 		st.construct(arr, 0, arr.length - 1, 0);
 		st.update(0, arr.length - 1, 0, 4, 0, 3);
+		st.update(0, arr.length - 1, 0, 2, 0, 3);
 		System.out.println(st.query(0, arr.length - 1, 0, 4, 0));
 	}
 	
@@ -75,19 +76,24 @@ public class SegmentTreeLazy{
 		if(r < ql || l > qr){
 			return emptyQuery;
 		}
+		
+		tag(l, r, i);
+		
 		if(l >= ql && qr >= r){
 			return seg[i];
 		}
-		tag(l, r, i);
 		
 		int m = (l + r) >>> 1;
 		return combineQuery(query(l, m, ql, qr, i * 2 + 1), query(m + 1, r, ql, qr, i * 2 + 2));
 	}
 	
 	void update(int l, int r, int ul, int ur, int i, int val){
+		tag(l, r, i);
+		
 		if(r < ul || l > ur || updateBreak(i, val)){
 			return;
 		}
+		
 		if(l >= ul && r <= ur && updateCondition(i, val)){
 			seg[i] = combineUpdateRange(l, r, seg[i], val);
 			if(l != r){
@@ -96,7 +102,6 @@ public class SegmentTreeLazy{
 			}
 			return;
 		}
-		tag(l, r, i);
 		
 		int m = (l + r) >>> 1;
 		update(l, m, ul, ur, i * 2 + 1, val);
