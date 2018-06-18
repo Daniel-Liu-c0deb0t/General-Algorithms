@@ -1,7 +1,5 @@
-# Reinforcement Learning
-
-## DDDQN
-### Description
+# DDDQN
+## Description
 Implementation of a Dueling Double Deep Q Network using TensorFlow. It also depends on Numpy and Matplotlib.
 
 It uses three convolution layers and two layers each for the advantage and the value calculation. Two networks are used for double Q learning. The learning algorthm uses an e-greedy approach to pick the best action for each state (exploitation), with a random chance of picking a random action (exploration). The epsilon value is annealed over time.
@@ -18,7 +16,7 @@ And a YouTube video demostrating the result is available [here](https://www.yout
 
 I had to play around with the hyperparameters to get that result. I'm pretty satisfied, although the result is probably far from perfect. To run with the pretrained weights, make sure that the `is_testing` parameter is set to `True` in the code. Also make sure that the `load_path` is set to the correct file.
 
-### References
+## References
 [Medium post on DDDQNs](https://medium.com/@awjuliani/simple-reinforcement-learning-with-tensorflow-part-4-deep-q-networks-and-beyond-8438a3e2b8df)
 
 [The author's code](https://github.com/awjuliani/DeepRL-Agents)
