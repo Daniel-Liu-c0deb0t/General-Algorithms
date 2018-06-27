@@ -21,7 +21,7 @@ I had to play around with the hyperparameters to get that result. I'm pretty sat
 
 [The author's code](https://github.com/awjuliani/DeepRL-Agents)
 
-Actually, the whole series of posts helped me understand reinforcement learning. The source code is also available and it helped me learn TensorFlow. I recommend reading the posts.
+Actually, the whole series of posts helped me understand reinforcement learning. The source code is also available and it helped me learn TensorFlow. I recommend reading the posts. I used the author's implementation of the gridworld environment.
 
 [Implementation with TensorFlow + TFLearn](https://github.com/gokhanettin/dddqn-tf)
 
